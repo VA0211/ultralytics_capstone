@@ -38,7 +38,7 @@ class YOLO:
 
         # Generate a color palette for the classes
         self.color_palette = np.random.uniform(0, 255, size=(len(self.classes), 3))
-
+        
     def draw_detections(self, img, box, score, class_id):
         """
         Draws bounding boxes and labels on the input image based on the detected objects.
@@ -54,8 +54,9 @@ class YOLO:
         """
         # Extract the coordinates of the bounding box
         x1, y1, w, h = box
-
+        print(self.classes)
         # Retrieve the color for the class ID
+        print(self.color_palette)
         color = self.color_palette[class_id]
 
         # Draw the bounding box on the image
