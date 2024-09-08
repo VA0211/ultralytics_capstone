@@ -57,6 +57,7 @@ class YOLO:
         print(self.classes)
         # Retrieve the color for the class ID
         print(self.color_palette)
+        print(class_id)
         color = self.color_palette[class_id]
 
         # Draw the bounding box on the image
