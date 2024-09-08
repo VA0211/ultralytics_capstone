@@ -205,7 +205,7 @@ class YOLO:
         start_time = time.time()
         # Run inference using the preprocessed image data
         outputs = session.run(None, {model_inputs[0].name: img_data})
-
+        print(outputs)
         inf_time = time.time() - start_time
         fps = float(1/inf_time)
         print(f"Inferece time = {inf_time:.4f} s")
