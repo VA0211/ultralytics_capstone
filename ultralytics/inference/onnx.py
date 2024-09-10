@@ -54,12 +54,14 @@ def main(args):
     for path in img_path_list:
         img_path = Path(path)
         img = reader(img_path)
-        size = torch.tensor([[img.shape[2], img.shape[3]]])
+        # size = torch.tensor([[img.shape[2], img.shape[3]]])
         
         start_time = time.time()
         output = session.run(
             output_names=None,
-            input_feed={'images': img.numpy(), "orig_target_sizes": size.numpy()}
+            input_feed={'images': img.numpy(), 
+                        # "orig_target_sizes": size.numpy()
+                        }
         )
         inf_time = time.time() - start_time
         fps = float(1/inf_time)
