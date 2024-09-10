@@ -3,6 +3,7 @@ from pathlib import Path
 import sys
 import time
 import os
+import cv2
 import torch
 from PIL import Image, ImageDraw
 from torchvision import transforms
@@ -19,13 +20,14 @@ class ImageReader:
     def __call__(self, image_path):
         self.pil_img = Image.open(image_path).convert('RGB').resize((self.resize, self.resize))
         return self.transform(self.pil_img).unsqueeze(0)
-
+    
 def createDirectory(directory):
     try:
         if not os.path.exists(directory):
             os.makedirs(directory)
     except OSError:
         print("Error: Failed to create the directory.")
+
 
 def main(args):
     print("Using ONNX Runtime on device:", ort.get_device())
@@ -65,31 +67,49 @@ def main(args):
         print(f"FPS = {fps:.2f}")
         all_inf_time.append(inf_time)
         
-        labels, boxes, scores = output
-        
+        boxes = output[0][0, :, :4]  # First 4 columns
+        scores = output[0][0, :, 4]  # 5th column
+        labels = output[0][0, :, 5]  # 6th column
+
+        class_name_list = ['class1', 'class10', 'class10_1', 'class2', 'class3', 'class4', 'class5', 'class6', 'class7', 'class8']
+
+        # Random color
+        # color_palette = np.random.uniform(0, 255, size=(len(class_name_list), 3)).astype(int)
+        # color_map = {i: tuple(color_palette[i]) for i in range(len(class_name_list))}
+
+        color_map = {
+            0: 'red',
+            1: 'blue',
+            2: 'green',
+            3: 'purple',
+            4: 'orange',
+            5: 'pink',
+            6: 'yellow',
+            7: 'cyan',
+            8: 'magenta',
+            9: 'lime'
+        }
+
         im = reader.pil_img
         draw = ImageDraw.Draw(im)
-        thrh = args.threshold
 
-        for i in range(img.shape[0]):
+        indices = cv2.dnn.NMSBoxes(boxes, scores, args.threshold, args.iou)
+
+        for i in indices:
             scr = scores[i]
-            lab = labels[i][scr > thrh]
-            box = boxes[i][scr > thrh]
+            lab = labels[i][scr > args.threshold]
+            box = boxes[i][scr > args.threshold]
 
             if len(lab) == 0:  # Check if lab is empty
                 continue  # Skip this iteration if no objects are detected
-    
+
             # Iterate over each box and corresponding label
             for j in range(box.shape[0]):
                 b = box[j]
                 l = lab[j]  # Get the corresponding label for this box
-
-                # Map the category ID to the class name
-                category_id = coco_dataset.mscoco_label2category[l]
-                class_name = coco_dataset.mscoco_category2name[category_id]
-
-                draw.rectangle(list(b), outline='red')
-                draw.text((b[0], b[1]), text=str(class_name), fill='yellow')
+                color = color_map.get(int(l), (255, 255, 255))  # Default is white if not found
+                draw.rectangle(list(b), outline=color)
+                draw.text((b[0], b[1]), text=str(class_name_list[int(l)]), fill='yellow')
                 
         file_dir = Path(img_path).parent.parent / 'onnx_output'
         createDirectory(file_dir)
@@ -111,6 +131,7 @@ if __name__ == '__main__':
     parser.add_argument("--image", '-i', type=str, ) # Single image path
     parser.add_argument("--imgpath", '-ipth', type=str, default=None) # Directory with images
     parser.add_argument("--threshold", '-t', type=float, default=0.6)
+    parser.add_argument("--iou", '-iou', type=float, default=0.8)
     args = parser.parse_args()
 
     main(args)

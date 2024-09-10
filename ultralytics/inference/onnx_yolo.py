@@ -54,10 +54,8 @@ class YOLO:
         """
         # Extract the coordinates of the bounding box
         x1, y1, w, h = box
-        print(self.classes)
         # Retrieve the color for the class ID
-        print(self.color_palette)
-        print(class_id)
+        print("Class ID:", class_id)
         color = self.color_palette[class_id]
 
         # Draw the bounding box on the image
@@ -167,7 +165,7 @@ class YOLO:
 
         # Apply non-maximum suppression to filter out overlapping bounding boxes
         indices = cv2.dnn.NMSBoxes(boxes, scores, self.confidence_thres, self.iou_thres)
-
+ 
         # Iterate over the selected indices after non-maximum suppression
         for i in indices:
             # Get the box, score, and class ID corresponding to the index
