@@ -73,7 +73,7 @@ def main(args):
         scores = output[0][0, :, 4]  # 5th column
         labels = output[0][0, :, 5]  # 6th column
 
-        class_name_list = ['class1', 'class10', 'class10_1', 'class2', 'class3', 'class4', 'class5', 'class6', 'class7', 'class8']
+        class_name_list = ['class1', 'class10', 'class2', 'class3', 'class4', 'class5', 'class6', 'class7', 'class8', 'class9']
 
         # Random color
         # color_palette = np.random.uniform(0, 255, size=(len(class_name_list), 3)).astype(int)
