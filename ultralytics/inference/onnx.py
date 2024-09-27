@@ -36,7 +36,7 @@ def main(args):
     sess_options.enable_profiling = True
     session = ort.InferenceSession(args.model, sess_options=sess_options, providers=providers)
     
-    reader = ImageReader(resize=640)
+    reader = ImageReader(resize=args.imgsize)
     img_path_list = []
     all_inf_time = []
 
@@ -132,6 +132,7 @@ if __name__ == '__main__':
     parser.add_argument("--model", '-m', type=str, ) # ONNX model path
     parser.add_argument("--image", '-i', type=str, ) # Single image path
     parser.add_argument("--imgpath", '-ipth', type=str, default=None) # Directory with images
+    parser.add_argument("--imgsize", '-isize', type=int, default=640) # Single image path
     parser.add_argument("--threshold", '-t', type=float, default=0.6)
     parser.add_argument("--iou", '-iou', type=float, default=0.8)
     args = parser.parse_args()
