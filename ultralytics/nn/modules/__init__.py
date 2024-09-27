@@ -83,6 +83,12 @@ from .transformer import (
     TransformerLayer,
 )
 
+from .new_block import (
+    ASFF,
+    LADH,
+    Partial_conv3,
+    FasterNetBlock
+)
 __all__ = (
     "Conv",
     "Conv2",
@@ -150,4 +156,8 @@ __all__ = (
     "Attention",
     "PSA",
     "SCDown",
+    "ASFF",
+    "LADH",
+    "Partial_conv3",
+    "FasterNetBlock"
 )
