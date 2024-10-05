@@ -53,6 +53,9 @@ from .block import (
     RepVGGDW,
     ResNetLayer,
     SCDown,
+    C3k2,
+    C2fPSA,
+    C2PSA,
 )
 from .conv import (
     CBAM,
@@ -159,5 +162,8 @@ __all__ = (
     "ASFF",
     "LADH",
     "Partial_conv3",
-    "FasterNetBlock"
+    "FasterNetBlock",
+    "C3k2",
+    "C2fPSA",
+    "C2PSA",
 )
